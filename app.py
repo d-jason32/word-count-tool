@@ -7,41 +7,37 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('filename')
 
-parser.add_argument('-c',
-                    '--byte',
-                    action='store_true')
+parser.add_argument('-c', '--byte', action='store_true')
+parser.add_argument('-l', '--line', action='store_true')
+parser.add_argument('-w', '--word', action='store_true')
+parser.add_argument('-m', '--character', action='store_true')
 
-parser.add_argument('-l',
-                    '--line',
-                    action='store_true')
-
-parser.add_argument('-w',
-                    '--word',
-                    action='store_true')
-
-parser.add_argument('-m',
-                    '--character',
-                    action='store_true')
-                    
 args = parser.parse_args()
 
-if args.byte:
+try:
     with open(args.filename, 'rb') as file:
-        content = file.read()
-        print(f"{len(content)} {args.filename}")
+        read = file.read()
+        read_lines = read.splitlines()
+        decoded = read.decode('utf-8')
+except Exception as e:
+    print(f"File problem: {e}")
+    exit()
+
+if not (args.byte or args.line or args.word or args.character):
+    print(f"\t{len(read)} {len(read)} {len(decoded.split())} {args.filename}")
+
+if args.byte:
+    print(f"\t{len(read)} {args.filename}")
 
 if args.line:
-    with open(args.filename, 'rb') as file:
-        content = file.readlines()
-        print(f"{len(content)} {args.filename}")
+    print(f"\t{len(read_lines)} {args.filename}")
 
 if args.word:
-    with open(args.filename, 'rb') as file:
-        content = file.read()
-        print(f"{len(content.split())} {args.filename}")
+    
+    print(f"\t{len(decoded.split())} {args.filename}")
 
 if args.character:
-    with open(args.filename, 'rb') as file:
-        content = file.read(-1)
-        decoded = content.decode('utf-8')
-        print(f"{len(decoded)} {args.filename}")
+    decoded = read.decode('utf-8')
+    print(f"\t{len(decoded)} {args.filename}")
+
+
